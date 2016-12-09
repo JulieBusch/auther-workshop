@@ -28,6 +28,7 @@ app.use(function (req, res, next) {
 app.use('/api', require('../api/api.router'));
 
 app.post('/login', function(req, res, next) {
+  console.log(req.body)
   User.findOne({
     where: req.body
   })
