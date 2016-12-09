@@ -61,12 +61,7 @@ export const removeUser = id => dispatch => {
 export const addUser = user => dispatch => {
   axios.post('/api/users', user)
        .then(function(res) {
-          dispatch(create(res.data));
-          return res.data;})
-       .then(function(newUser) {
-        console.log("Made it to second .then ", newUser);
-         dispatch(setCurrentUser(newUser.email, newUser.password));
-       })
+          dispatch(create(res.data));})
        .catch(err => console.error(`Creating user: ${user} unsuccesful`, err));
 }
 

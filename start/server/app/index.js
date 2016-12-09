@@ -27,6 +27,7 @@ app.use(function (req, res, next) {
 
 app.use('/api', require('../api/api.router'));
 
+
 app.post('/login', function(req, res, next) {
   console.log(req.body)
   User.findOne({
@@ -44,7 +45,18 @@ app.post('/login', function(req, res, next) {
     .catch(next);
 });
 
+app.put('/logout', function(req, res, next) {
+  req.session.user = null;
+})
 
+app.post('/signup', function(req, res, next){
+  User.create(req.body)
+  .then(function(user){
+    req.session.user = user;
+    res.sendStatus(204)
+  })
+  .catch(next);
+})
 
 var validFrontendRoutes = ['/', '/stories', '/users', '/stories/:id', '/users/:id', '/signup', '/login'];
 var indexPath = path.join(__dirname, '..', '..', 'browser', 'index.html');

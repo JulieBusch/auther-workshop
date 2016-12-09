@@ -24166,9 +24166,13 @@
 	
 	var _login2 = _interopRequireDefault(_login);
 	
+	var _signup = __webpack_require__(321);
+	
+	var _signup2 = _interopRequireDefault(_signup);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	exports.default = (0, _redux.combineReducers)({ users: _users2.default, stories: _stories2.default, login: _login2.default });
+	exports.default = (0, _redux.combineReducers)({ users: _users2.default, stories: _stories2.default, login: _login2.default, signup: _signup2.default });
 
 /***/ },
 /* 217 */
@@ -24267,10 +24271,6 @@
 	  return function (dispatch) {
 	    _axios2.default.post('/api/users', user).then(function (res) {
 	      dispatch(create(res.data));
-	      return res.data;
-	    }).then(function (newUser) {
-	      console.log("Made it to second .then ", newUser);
-	      dispatch((0, _login.setCurrentUser)(newUser.email, newUser.password));
 	    }).catch(function (err) {
 	      return console.error('Creating user: ' + user + ' unsuccesful', err);
 	    });
@@ -32129,7 +32129,7 @@
 	
 	var _reactRouter = __webpack_require__(246);
 	
-	var _users = __webpack_require__(217);
+	var _signup = __webpack_require__(321);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32264,7 +32264,7 @@
 	};
 	var mapDispatch = function mapDispatch(dispatch) {
 	  return { signUp: function signUp(user) {
-	      dispatch((0, _users.addUser)(user));
+	      dispatch((0, _signup.signUpNewUser)(user));
 	    } };
 	};
 	
@@ -50468,6 +50468,54 @@
 	
 	exports.default = ContentEditable;
 	module.exports = exports['default'];
+
+/***/ },
+/* 321 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.signUpNewUser = undefined;
+	exports.default = reducer;
+	
+	var _axios = __webpack_require__(218);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var signUpUser = 'SIGNUP_NEW_USER';
+	
+	var signUp = function signUp(user) {
+		return { type: signUpUser, currentUser: user };
+	};
+	
+	function reducer() {
+		var currentUser = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+		var action = arguments[1];
+	
+		switch (action.type) {
+	
+			case signUpUser:
+				return action.currentUser;
+	
+			default:
+				return currentUser;
+		}
+	}
+	
+	var signUpNewUser = exports.signUpNewUser = function signUpNewUser(user) {
+		return function (dispatch) {
+			_axios2.default.post('/signup', user).then(function (res) {
+				dispatch(signUp(res.data));
+			}).catch(function (err) {
+				return console.error('Creating user: ' + user + ' unsuccesful', err);
+			});
+		};
+	};
 
 /***/ }
 /******/ ]);

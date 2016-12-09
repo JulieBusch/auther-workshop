@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from'react-redux';
 import { browserHistory } from 'react-router';
-import { addUser } from '../redux/users'
+import { signUpNewUser } from '../redux/signup'
 
 /* -----------------    COMPONENT     ------------------ */
 
@@ -74,7 +74,7 @@ class Signup extends React.Component {
 
 const mapState = () => ({ message: 'Sign up' })
 const mapDispatch = (dispatch) => ({ signUp : (user) => {
-  dispatch(addUser(user))
+  dispatch(signUpNewUser(user))
 }})
 
 
