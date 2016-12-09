@@ -1,4 +1,4 @@
-'use strict'; 
+'use strict';
 
 var app = require('express')();
 var path = require('path');
@@ -26,6 +26,22 @@ app.use(function (req, res, next) {
 });
 
 app.use('/api', require('../api/api.router'));
+
+app.post('/login', function(req, res, next) {
+  User.findOne({
+    where: req.body
+  })
+    .then(function(user) {
+      if (!user) {
+        res.sendStatus(401);
+      } else {
+        req.session.user = user;
+        res.sendStatus(204);
+      }
+
+    })
+    .catch(next);
+});
 
 var validFrontendRoutes = ['/', '/stories', '/users', '/stories/:id', '/users/:id', '/signup', '/login'];
 var indexPath = path.join(__dirname, '..', '..', 'browser', 'index.html');
