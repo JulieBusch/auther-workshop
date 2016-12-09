@@ -8,7 +8,7 @@ import { addUser } from '../redux/users'
 class Signup extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.onSignupSubmit = this.onSignupSubmit.bind(this);
   }
 
@@ -21,19 +21,19 @@ class Signup extends React.Component {
                 <div className="form-group">
                   <label>email</label>
                   <input
-                    name="email" 
-                    type="email" 
-                    className="form-control" 
-                    required 
+                    name="email"
+                    type="email"
+                    className="form-control"
+                    required
                   />
                 </div>
                 <div className="form-group">
                     <label>password</label>
-                    <input 
+                    <input
                       name="password"
-                      type="password" 
-                      className="form-control" 
-                      required 
+                      type="password"
+                      className="form-control"
+                      required
                     />
                 </div>
                 <button type="submit" className="btn btn-block btn-primary">{message}</button>
@@ -61,9 +61,11 @@ class Signup extends React.Component {
   onSignupSubmit(event) {
     const { message } = this.props;
     event.preventDefault();
-    const email = event.target.email.value;
-    const password = event.target.password.value;
-
+    const userObj = {
+      email: event.target.email.value,
+      password: event.target.password.value
+    }
+    this.props.signUp(userObj);
 
   }
 }
@@ -71,8 +73,8 @@ class Signup extends React.Component {
 /* -----------------    CONTAINER     ------------------ */
 
 const mapState = () => ({ message: 'Sign up' })
-const mapDispatch = (dispatch) => ({ signUp : (email, password) => {
-  dispatch(addUser(email, password))
+const mapDispatch = (dispatch) => ({ signUp : (user) => {
+  dispatch(addUser(user))
 }})
 
 

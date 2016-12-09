@@ -24158,11 +24158,11 @@
 	
 	var _users2 = _interopRequireDefault(_users);
 	
-	var _stories = __webpack_require__(243);
+	var _stories = __webpack_require__(244);
 	
 	var _stories2 = _interopRequireDefault(_stories);
 	
-	var _login = __webpack_require__(244);
+	var _login = __webpack_require__(243);
 	
 	var _login2 = _interopRequireDefault(_login);
 	
@@ -24185,6 +24185,8 @@
 	var _axios = __webpack_require__(218);
 	
 	var _axios2 = _interopRequireDefault(_axios);
+	
+	var _login = __webpack_require__(243);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -24264,7 +24266,11 @@
 	var addUser = exports.addUser = function addUser(user) {
 	  return function (dispatch) {
 	    _axios2.default.post('/api/users', user).then(function (res) {
-	      return dispatch(create(res.data));
+	      dispatch(create(res.data));
+	      return res.data;
+	    }).then(function (newUser) {
+	      console.log("Made it to second .then ", newUser);
+	      dispatch((0, _login.setCurrentUser)(newUser.email, newUser.password));
 	    }).catch(function (err) {
 	      return console.error('Creating user: ' + user + ' unsuccesful', err);
 	    });
@@ -25779,6 +25785,56 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.setCurrentUser = undefined;
+	exports.default = reducer;
+	
+	var _axios = __webpack_require__(218);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var currentUser = 'SET_CURRENT_USER';
+	
+	var current = function current(user) {
+	  return { type: currentUser, currentUser: user };
+	};
+	
+	function reducer() {
+	  var currentUser = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	
+	    case currentUser:
+	      return action.currentUser;
+	
+	    default:
+	      return currentUser;
+	  }
+	}
+	
+	var setCurrentUser = exports.setCurrentUser = function setCurrentUser(email, password) {
+	  return function (dispatch) {
+	    _axios2.default.post('/login', {
+	      email: email,
+	      password: password
+	    }).then(function (res) {
+	      console.log("Made it to setCurrentUser from sign-in!", res.data);
+	      dispatch(current(res.data));
+	    });
+	  };
+	};
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.updateStory = exports.addStory = exports.removeStory = exports.fetchStories = undefined;
 	exports.default = reducer;
 	
@@ -25884,55 +25940,6 @@
 	};
 
 /***/ },
-/* 244 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.setCurrentUser = undefined;
-	exports.default = reducer;
-	
-	var _axios = __webpack_require__(218);
-	
-	var _axios2 = _interopRequireDefault(_axios);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var currentUser = 'SET_CURRENT_USER';
-	
-	var current = function current(user) {
-	  return { type: currentUser, currentUser: user };
-	};
-	
-	function reducer() {
-	  var currentUser = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	
-	    case currentUser:
-	      return action.currentUser;
-	
-	    default:
-	      return currentUser;
-	  }
-	}
-	
-	var setCurrentUser = exports.setCurrentUser = function setCurrentUser(email, password) {
-	  return function (dispatch) {
-	    _axios2.default.post('/login', {
-	      email: email,
-	      password: password
-	    }).then(function (res) {
-	      dispatch(current(res.data));
-	    });
-	  };
-	};
-
-/***/ },
 /* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -25984,7 +25991,7 @@
 	
 	var _users = __webpack_require__(217);
 	
-	var _stories = __webpack_require__(243);
+	var _stories = __webpack_require__(244);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -31961,7 +31968,7 @@
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
-	var _login = __webpack_require__(244);
+	var _login = __webpack_require__(243);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32239,8 +32246,11 @@
 	      var message = this.props.message;
 	
 	      event.preventDefault();
-	      var email = event.target.email.value;
-	      var password = event.target.password.value;
+	      var userObj = {
+	        email: event.target.email.value,
+	        password: event.target.password.value
+	      };
+	      this.props.signUp(userObj);
 	    }
 	  }]);
 	
@@ -32253,8 +32263,8 @@
 	  return { message: 'Sign up' };
 	};
 	var mapDispatch = function mapDispatch(dispatch) {
-	  return { signUp: function signUp(email, password) {
-	      dispatch((0, _users.addUser)(email, password));
+	  return { signUp: function signUp(user) {
+	      dispatch((0, _users.addUser)(user));
 	    } };
 	};
 	
@@ -32516,7 +32526,7 @@
 	
 	var _users = __webpack_require__(217);
 	
-	var _stories = __webpack_require__(243);
+	var _stories = __webpack_require__(244);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32668,7 +32678,7 @@
 	
 	var _StoryItem2 = _interopRequireDefault(_StoryItem);
 	
-	var _stories = __webpack_require__(243);
+	var _stories = __webpack_require__(244);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -49876,7 +49886,7 @@
 	
 	var _reactRouter = __webpack_require__(246);
 	
-	var _stories = __webpack_require__(243);
+	var _stories = __webpack_require__(244);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -49985,7 +49995,7 @@
 	
 	var _StoryItem2 = _interopRequireDefault(_StoryItem);
 	
-	var _stories = __webpack_require__(243);
+	var _stories = __webpack_require__(244);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -50206,7 +50216,7 @@
 	
 	var _reactContenteditable2 = _interopRequireDefault(_reactContenteditable);
 	
-	var _stories = __webpack_require__(243);
+	var _stories = __webpack_require__(244);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	

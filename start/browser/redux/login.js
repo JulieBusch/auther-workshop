@@ -10,7 +10,7 @@ export default function reducer (currentUser = {}, action) {
 		case currentUser:
 			return action.currentUser
 
-		default: 
+		default:
 	      return currentUser;
 	}
 }
@@ -22,6 +22,7 @@ export const setCurrentUser = (email, password) => {
   	password: password
   })
     .then(res => {
+      console.log("Made it to setCurrentUser from sign-in!", res.data);
        	dispatch(current(res.data));
        })
     }

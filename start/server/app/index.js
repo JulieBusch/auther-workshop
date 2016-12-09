@@ -44,6 +44,8 @@ app.post('/login', function(req, res, next) {
     .catch(next);
 });
 
+
+
 var validFrontendRoutes = ['/', '/stories', '/users', '/stories/:id', '/users/:id', '/signup', '/login'];
 var indexPath = path.join(__dirname, '..', '..', 'browser', 'index.html');
 validFrontendRoutes.forEach(function (stateRoute) {

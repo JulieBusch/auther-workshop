@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {setCurrentUser} from './login';
 
 /* -----------------    ACTIONS     ------------------ */
 
@@ -20,8 +21,8 @@ const update = user  => ({ type: UPDATE, user })
 
 export default function reducer (users = [], action) {
   switch (action.type) {
-    
-    case INITIALIZE: 
+
+    case INITIALIZE:
       return action.users
 
     case CREATE:
@@ -31,13 +32,13 @@ export default function reducer (users = [], action) {
       return users
         .filter(user => user.id !== action.id)
 
-    
+
     case UPDATE:
       return users
         .map(user => (
           action.user.id === user.id ? action.user : user))
 
-    default: 
+    default:
       return users;
   }
 }
@@ -59,8 +60,14 @@ export const removeUser = id => dispatch => {
 
 export const addUser = user => dispatch => {
   axios.post('/api/users', user)
-       .then(res => dispatch(create(res.data)))
-       .catch(err => console.error(`Creating user: ${user} unsuccesful`, err))
+       .then(function(res) {
+          dispatch(create(res.data));
+          return res.data;})
+       .then(function(newUser) {
+        console.log("Made it to second .then ", newUser);
+         dispatch(setCurrentUser(newUser.email, newUser.password));
+       })
+       .catch(err => console.error(`Creating user: ${user} unsuccesful`, err));
 }
 
 export const updateUser = user => dispatch => {
