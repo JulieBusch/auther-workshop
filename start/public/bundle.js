@@ -32122,6 +32122,8 @@
 	
 	var _reactRouter = __webpack_require__(246);
 	
+	var _users = __webpack_require__(217);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -32237,7 +32239,8 @@
 	      var message = this.props.message;
 	
 	      event.preventDefault();
-	      console.log(message + ' isn\'t implemented yet');
+	      var email = event.target.email.value;
+	      var password = event.target.password.value;
 	    }
 	  }]);
 	
@@ -32249,7 +32252,11 @@
 	var mapState = function mapState() {
 	  return { message: 'Sign up' };
 	};
-	var mapDispatch = null;
+	var mapDispatch = function mapDispatch(dispatch) {
+	  return { signUp: function signUp(email, password) {
+	      dispatch((0, _users.addUser)(email, password));
+	    } };
+	};
 	
 	exports.default = (0, _reactRedux.connect)(mapState, mapDispatch)(Signup);
 
